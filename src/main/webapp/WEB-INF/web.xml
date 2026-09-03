@@ -31,7 +31,14 @@
         <url-pattern>/admin/treatments/*</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>AppointmentServlet</servlet-name>
+        <servlet-class>com.sunrise.dental.controller.AppointmentServlet</servlet-class>
+    </servlet>
 
-
+    <servlet-mapping>
+        <servlet-name>AppointmentServlet</servlet-name>
+        <url-pattern>/patient/appointments/*</url-pattern>
+    </servlet-mapping>
 
 </web-app>
