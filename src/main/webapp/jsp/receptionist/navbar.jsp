@@ -21,9 +21,8 @@
 <body>
 <nav>
     <a href="<%= request.getContextPath() %>/jsp/receptionist/dashboard.jsp">Dashboard</a>
-    <a href="<%= request.getContextPath() %>/jsp/receptionist/patients.jsp">Patient Management</a>
+    <a href="<%= request.getContextPath() %>/jsp/receptionist/managePatients.jsp">Patient Management</a>
     <a href="<%= request.getContextPath() %>/jsp/receptionist/payment.jsp">Appointment Management</a>
-    <a href="<%= request.getContextPath() %>/jsp/receptionist/reports.jsp">Reports</a>
     <a href="<%= request.getContextPath() %>/logout">Logout</a>
 </nav>
 </body>

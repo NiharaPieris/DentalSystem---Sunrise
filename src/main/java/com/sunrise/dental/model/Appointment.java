@@ -10,8 +10,9 @@ public class Appointment {
     private Date appointmentDate;
     private Time appointmentTime;
     private int tokenNumber;
+    private String status;               // pending / process / finished / missed
 
-    // Extra fields for display (loaded via JOIN)
+    // Extra fields for display
     private String treatmentName;
     private String patientName;
     private String patientEmail;
@@ -37,7 +38,10 @@ public class Appointment {
     public int getTokenNumber() { return tokenNumber; }
     public void setTokenNumber(int tokenNumber) { this.tokenNumber = tokenNumber; }
 
-    // ---------- Extra fields ----------
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+
+    // Extra fields
     public String getTreatmentName() { return treatmentName; }
     public void setTreatmentName(String treatmentName) { this.treatmentName = treatmentName; }
 
