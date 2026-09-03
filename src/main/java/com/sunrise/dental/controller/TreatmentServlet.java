@@ -11,7 +11,7 @@ public class TreatmentServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        String path = req.getPathInfo();
+        String path = req.getPathInfo(); // e.g. /new, /edit, /delete
 
         try (Connection conn = DBConnection.getConnection()) {
             if ("/new".equals(path)) {
@@ -26,6 +26,7 @@ public class TreatmentServlet extends HttpServlet {
                 ps.setString(7, String.join(",", req.getParameterValues("active_days")));
                 ps.setInt(8, Integer.parseInt(req.getParameter("dentist_id")));
                 ps.executeUpdate();
+
                 resp.sendRedirect(req.getContextPath() + "/jsp/admin/manageTreatments.jsp");
 
             } else if ("/edit".equals(path)) {
@@ -41,6 +42,7 @@ public class TreatmentServlet extends HttpServlet {
                 ps.setInt(8, Integer.parseInt(req.getParameter("dentist_id")));
                 ps.setInt(9, Integer.parseInt(req.getParameter("treatment_id")));
                 ps.executeUpdate();
+
                 resp.sendRedirect(req.getContextPath() + "/jsp/admin/manageTreatments.jsp");
 
             } else if ("/delete".equals(path)) {
@@ -48,8 +50,12 @@ public class TreatmentServlet extends HttpServlet {
                 PreparedStatement ps = conn.prepareStatement(sql);
                 ps.setInt(1, Integer.parseInt(req.getParameter("treatment_id")));
                 ps.executeUpdate();
+
                 resp.sendRedirect(req.getContextPath() + "/jsp/admin/manageTreatments.jsp");
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            resp.getWriter().println("<h3>SQL Error: " + e.getMessage() + "</h3>");
         } catch (Exception e) {
             e.printStackTrace();
             resp.getWriter().println("<h3>Error processing treatment action.</h3>");

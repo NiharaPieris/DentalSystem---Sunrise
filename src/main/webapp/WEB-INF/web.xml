@@ -21,6 +21,17 @@
         <url-pattern>/admin/users/*</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>TreatmentServlet</servlet-name>
+        <servlet-class>com.sunrise.dental.controller.TreatmentServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>TreatmentServlet</servlet-name>
+        <url-pattern>/admin/treatments/*</url-pattern>
+    </servlet-mapping>
+
+
 
 
 </web-app>
