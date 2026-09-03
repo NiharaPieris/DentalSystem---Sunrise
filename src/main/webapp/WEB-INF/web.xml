@@ -41,4 +41,15 @@
         <url-pattern>/patient/appointments/*</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>PaymentServlet</servlet-name>
+        <servlet-class>com.sunrise.dental.controller.PaymentServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>PaymentServlet</servlet-name>
+        <url-pattern>/receptionist/payment</url-pattern>
+    </servlet-mapping>
+
+
 </web-app>
