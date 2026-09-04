@@ -240,6 +240,43 @@ public class AppointmentDAO {
         return null;
     }
 
+    public List<Appointment> searchAppointmentsFlexible(Date date, Integer token,
+                                                        String treatmentName, String patientName) throws Exception {
+        List<Appointment> list = new ArrayList<>();
+        StringBuilder sql = new StringBuilder(ADMIN_BASE_SELECT + " WHERE 1=1");
+        List<Object> params = new ArrayList<>();
+
+        if (date != null) {
+            sql.append(" AND a.appointment_date = ?");
+            params.add(date);
+        }
+        if (token != null) {
+            sql.append(" AND a.token_number = ?");
+            params.add(token);
+        }
+        if (treatmentName != null && !treatmentName.isBlank()) {
+            sql.append(" AND t.name LIKE ?");
+            params.add("%" + treatmentName + "%");
+        }
+        if (patientName != null && !patientName.isBlank()) {
+            sql.append(" AND p.name LIKE ?");
+            params.add("%" + patientName + "%");
+        }
+
+        sql.append(" ORDER BY a.appointment_date DESC, a.appointment_time DESC");
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) list.add(mapAdminAppointment(rs));
+            }
+        }
+        return list;
+    }
+
     // ===================== Helpers =====================
 
     // Existing helper — kept exactly as-is for the dentist methods above
