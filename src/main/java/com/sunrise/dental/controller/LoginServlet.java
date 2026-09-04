@@ -37,31 +37,24 @@ public class LoginServlet extends HttpServlet {
             }
 
             // 2. Check Dentist / Receptionist
-            String userSql = "SELECT * FROM users WHERE username = ? AND password = ?";
+            String userSql = "SELECT * FROM users WHERE username = ? AND password = ? AND active = TRUE";
             try (PreparedStatement ps = conn.prepareStatement(userSql)) {
                 ps.setString(1, username);
                 ps.setString(2, password);
                 ResultSet rs = ps.executeQuery();
 
                 if (rs.next()) {
-                    int userId;
-                    try {
-                        userId = rs.getInt("user_id");
-                    } catch (Exception e) {
-                        userId = rs.getInt("id");
-                    }
-
+                    int userId = rs.getInt("user_id");
                     String role = rs.getString("role");
 
-                    // Store identity in session
                     HttpSession session = req.getSession(true);
-                    session.setAttribute("user_id", userId);          // ← This is the important part
+                    session.setAttribute("user_id", userId);
                     session.setAttribute("username", rs.getString("username"));
                     session.setAttribute("role", role);
 
-                    // Redirect according to role
                     if ("Dentist".equalsIgnoreCase(role)) {
-                        resp.sendRedirect(req.getContextPath() + "/jsp/dentist/dashboard.jsp");
+                        // Dentist goes directly to appointments page
+                        resp.sendRedirect(req.getContextPath() + "/dentist/appointments");
                     } else if ("Receptionist".equalsIgnoreCase(role)) {
                         resp.sendRedirect(req.getContextPath() + "/jsp/receptionist/dashboard.jsp");
                     } else {
@@ -74,7 +67,7 @@ public class LoginServlet extends HttpServlet {
             // Login failed
             resp.setContentType("text/html");
             resp.getWriter().println("<h3 style='color:red;'>Invalid username or password</h3>");
-            resp.getWriter().println("<a href='" + req.getContextPath() + "/login.jsp'>Try Again</a>");
+            resp.getWriter().println("<a href='" + req.getContextPath() + "/jsp/login.jsp'>Try Again</a>");
 
         } catch (Exception e) {
             e.printStackTrace();
