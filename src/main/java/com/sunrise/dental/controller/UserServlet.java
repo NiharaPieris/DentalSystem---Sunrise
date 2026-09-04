@@ -99,7 +99,8 @@ public class UserServlet extends HttpServlet {
                 resp.sendRedirect(req.getContextPath() + "/jsp/admin/manageUsers.jsp");
 
             } else if ("/delete".equals(path)) {
-                String sql = "DELETE FROM users WHERE user_id=?";
+                // Soft delete – hide the user instead of permanently deleting
+                String sql = "UPDATE users SET active = FALSE WHERE user_id = ?";
                 PreparedStatement ps = conn.prepareStatement(sql);
                 ps.setInt(1, Integer.parseInt(req.getParameter("user_id")));
                 ps.executeUpdate();

@@ -17,283 +17,330 @@
 %>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Receptionist - Patient Management</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Management - Sunrise Dental</title>
+
+    <!-- Bootstrap 5 + Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
     <style>
+        :root {
+            --primary: #0d6efd;
+            --card-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            background: #f4f6f9;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
         }
-        .container {
-            max-width: 1100px;
-            margin: 30px auto;
-            padding: 0 20px;
+
+        .page-header {
+            background: white;
+            border-radius: 16px;
+            padding: 1.25rem 1.5rem;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 1.5rem;
         }
-        .card {
-            background: #fff;
-            border-radius: 8px;
-            padding: 25px;
-            margin-bottom: 25px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
-        h1 {
-            text-align: center;
-            color: #2c3e50;
-            margin-bottom: 25px;
-        }
-        h2 {
-            margin-top: 0;
-            color: #333;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 8px;
-        }
-        label {
-            display: block;
-            margin-top: 12px;
-            font-weight: bold;
-            color: #444;
-        }
-        input[type=text], input[type=email] {
-            width: 100%;
-            padding: 10px;
-            margin-top: 6px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        .search-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr auto;
-            gap: 15px;
-            align-items: end;
-        }
-        input[type=submit], button {
-            background: #2c3e50;
-            color: white;
+
+        .card-main {
             border: none;
-            padding: 11px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            background: white;
         }
-        input[type=submit]:hover, button:hover {
-            background: #1a252f;
-        }
-        .error {
-            background: #f8d7da;
-            color: #721c24;
-            padding: 12px 15px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-            border: 1px solid #f5c6cb;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-        th {
-            background: #f8f9fa;
+
+        .table thead th {
+            background: linear-gradient(90deg, #0d6efd, #0b5ed7);
+            color: white;
             font-weight: 600;
-            color: #333;
+            border: none;
+            padding: 14px 12px;
+            white-space: nowrap;
         }
-        tr:hover {
+
+        .table tbody td {
+            vertical-align: middle;
+            padding: 12px;
+        }
+
+        .btn {
+            border-radius: 10px;
+            font-weight: 500;
+        }
+
+        .btn-sm {
+            padding: 0.35rem 0.85rem;
+            font-size: 0.85rem;
+        }
+
+        .form-control, .form-select {
+            border-radius: 10px;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+        }
+
+        .info-card {
             background: #f8f9fa;
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            height: 100%;
         }
-        .btn-view {
-            background: #17a2b8;
-            padding: 6px 14px;
-            font-size: 13px;
+
+        .info-card .label {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-bottom: 2px;
         }
-        .btn-view:hover {
-            background: #138496;
+
+        .info-card .value {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #212529;
         }
-        .paid {
-            color: #28a745;
-            font-weight: bold;
-        }
-        .unpaid {
-            color: #dc3545;
-            font-weight: bold;
-        }
-        .details-grid {
-            display: grid;
-            grid-template-columns: 160px 1fr;
-            gap: 10px 20px;
-            margin-top: 10px;
-        }
-        .details-grid strong {
-            color: #555;
-        }
-        .back-link {
-            display: inline-block;
-            margin-bottom: 15px;
-            color: #2c3e50;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .back-link:hover {
-            text-decoration: underline;
+
+        .badge {
+            font-weight: 500;
+            padding: 5px 10px;
         }
     </style>
 </head>
 <body>
 
-<%-- Include the existing navbar --%>
-<jsp:include page="navbar.jsp" />
+<div class="container py-4">
 
-<div class="container">
-
-    <h1>Patient Management</h1>
+    <!-- Header -->
+    <div class="page-header d-flex justify-content-between align-items-center">
+        <div>
+            <h2 class="mb-0 fw-bold">
+                <i class="bi bi-person-vcard me-2 text-primary"></i>Patient Management
+            </h2>
+            <small class="text-muted">Search patients and view their appointment history</small>
+        </div>
+        <a href="<%= request.getContextPath() %>/jsp/receptionist/dashboard.jsp" class="btn btn-outline-primary btn-sm">
+            <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+        </a>
+    </div>
 
     <% if (error != null) { %>
-    <div class="error"><%= error %></div>
-    <% } %>
-
-    <!-- ===================== SEARCH FORM ===================== -->
-    <div class="card">
-        <h2>Search Patient</h2>
-        <form action="<%= request.getContextPath() %>/receptionist/patients" method="post">
-            <input type="hidden" name="action" value="search">
-
-            <div class="search-row">
-                <div>
-                    <label>Name</label>
-                    <input type="text" name="name" value="<%= searchName != null ? searchName : "" %>"
-                           placeholder="Enter patient name">
-                </div>
-                <div>
-                    <label>Phone</label>
-                    <input type="text" name="phone" value="<%= searchPhone != null ? searchPhone : "" %>"
-                           placeholder="Enter phone number">
-                </div>
-                <div>
-                    <label>Email</label>
-                    <input type="text" name="email" value="<%= searchEmail != null ? searchEmail : "" %>"
-                           placeholder="Enter email">
-                </div>
-                <div>
-                    <input type="submit" value="Search">
-                </div>
-            </div>
-        </form>
-    </div>
-
-    <!-- ===================== SEARCH RESULTS (List of patients) ===================== -->
-    <% if (patients != null) { %>
-    <div class="card">
-        <h2>Search Results (<%= patients.size() %> found)</h2>
-
-        <% if (patients.isEmpty()) { %>
-        <p>No patients found.</p>
-        <% } else { %>
-        <table>
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Phone</th>
-                <th>Email</th>
-                <th>Address</th>
-                <th>Action</th>
-            </tr>
-            </thead>
-            <tbody>
-            <% for (Patient p : patients) { %>
-            <tr>
-                <td><%= p.getPatientId() %></td>
-                <td><%= p.getName() %></td>
-                <td><%= p.getPhone() %></td>
-                <td><%= p.getEmail() %></td>
-                <td><%= p.getAddress() != null ? p.getAddress() : "-" %></td>
-                <td>
-                    <form action="<%= request.getContextPath() %>/receptionist/patients" method="post" style="display:inline;">
-                        <input type="hidden" name="action" value="view">
-                        <input type="hidden" name="patient_id" value="<%= p.getPatientId() %>">
-                        <input type="submit" value="View Details" class="btn-view">
-                    </form>
-                </td>
-            </tr>
-            <% } %>
-            </tbody>
-        </table>
-        <% } %>
+    <div class="alert alert-danger d-flex align-items-center mb-4">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <%= error %>
     </div>
     <% } %>
 
-    <!-- ===================== PATIENT DETAILS + APPOINTMENTS ===================== -->
-    <% if (patient != null) { %>
-    <div class="card">
-        <a href="<%= request.getContextPath() %>/receptionist/patients" class="back-link">← Back to Search</a>
-
-        <h2>Patient Details</h2>
-        <div class="details-grid">
-            <strong>Patient ID:</strong>     <span><%= patient.getPatientId() %></span>
-            <strong>Name:</strong>           <span><%= patient.getName() %></span>
-            <strong>Phone:</strong>          <span><%= patient.getPhone() %></span>
-            <strong>Email:</strong>          <span><%= patient.getEmail() %></span>
-            <strong>Address:</strong>        <span><%= patient.getAddress() != null ? patient.getAddress() : "-" %></span>
+    <!-- ===================== SEARCH CARD ===================== -->
+    <div class="card card-main mb-4">
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0 fw-semibold">
+                <i class="bi bi-search me-2"></i>Search Patient
+            </h5>
+        </div>
+        <div class="card-body">
+            <form action="<%= request.getContextPath() %>/receptionist/patients" method="post">
+                <input type="hidden" name="action" value="search">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">Name</label>
+                        <input type="text" name="name" class="form-control"
+                               value="<%= searchName != null ? searchName : "" %>"
+                               placeholder="Patient name">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">Phone</label>
+                        <input type="text" name="phone" class="form-control"
+                               value="<%= searchPhone != null ? searchPhone : "" %>"
+                               placeholder="Phone number">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">Email</label>
+                        <input type="text" name="email" class="form-control"
+                               value="<%= searchEmail != null ? searchEmail : "" %>"
+                               placeholder="Email address">
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-search me-1"></i> Search
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 
-    <div class="card">
-        <h2>Appointments History</h2>
-
-        <% if (appointments == null || appointments.isEmpty()) { %>
-        <p>This patient has no appointments yet.</p>
-        <% } else { %>
-        <table>
-            <thead>
-            <tr>
-                <th>Appointment ID</th>
-                <th>Treatment</th>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Token</th>
-                <th>Payment Status</th>
-                <th>Amount</th>
-            </tr>
-            </thead>
-            <tbody>
-            <% for (Map<String, Object> row : appointments) {
-                Appointment a = (Appointment) row.get("appointment");
-                Payment pay = (Payment) row.get("payment");
-            %>
-            <tr>
-                <td><%= a.getAppointmentId() %></td>
-                <td><%= a.getTreatmentName() %></td>
-                <td><%= a.getAppointmentDate() %></td>
-                <td><%= a.getAppointmentTime() %></td>
-                <td><%= a.getTokenNumber() %></td>
-                <td>
-                    <% if (pay != null && pay.isPaid()) { %>
-                    <span class="paid">PAID</span>
-                    <% } else { %>
-                    <span class="unpaid">UNPAID</span>
+    <!-- ===================== SEARCH RESULTS ===================== -->
+    <% if (patients != null) { %>
+    <div class="card card-main mb-4">
+        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 fw-semibold">
+                <i class="bi bi-people me-2"></i>Search Results
+            </h5>
+            <span class="badge bg-primary"><%= patients.size() %> found</span>
+        </div>
+        <div class="card-body p-0">
+            <% if (patients.isEmpty()) { %>
+            <div class="text-center text-muted py-5">
+                <i class="bi bi-person-x fs-3 d-block mb-2"></i>
+                No patients found matching your criteria.
+            </div>
+            <% } else { %>
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Address</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <% for (Patient p : patients) { %>
+                    <tr>
+                        <td><strong>#<%= p.getPatientId() %></strong></td>
+                        <td class="fw-semibold"><%= p.getName() %></td>
+                        <td><%= p.getPhone() != null ? p.getPhone() : "—" %></td>
+                        <td><%= p.getEmail() != null ? p.getEmail() : "—" %></td>
+                        <td><%= p.getAddress() != null ? p.getAddress() : "—" %></td>
+                        <td class="text-center">
+                            <form action="<%= request.getContextPath() %>/receptionist/patients" method="post" class="d-inline">
+                                <input type="hidden" name="action" value="view">
+                                <input type="hidden" name="patient_id" value="<%= p.getPatientId() %>">
+                                <button type="submit" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-eye me-1"></i> View
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
                     <% } %>
-                </td>
-                <td>
-                    <% if (pay != null && pay.isPaid()) { %>
-                    Rs. <%= pay.getTotalAmount() %>
-                    <% } else { %>
-                    -
-                    <% } %>
-                </td>
-            </tr>
+                    </tbody>
+                </table>
+            </div>
             <% } %>
-            </tbody>
-        </table>
-        <% } %>
+        </div>
+    </div>
+    <% } %>
+
+    <!-- ===================== PATIENT DETAILS ===================== -->
+    <% if (patient != null) { %>
+    <div class="card card-main mb-4">
+        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 fw-semibold">
+                <i class="bi bi-person-circle me-2"></i>Patient Details
+            </h5>
+            <a href="<%= request.getContextPath() %>/receptionist/patients" class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i> Back to Search
+            </a>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="info-card">
+                        <div class="label">Patient ID</div>
+                        <div class="value">#<%= patient.getPatientId() %></div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info-card">
+                        <div class="label">Full Name</div>
+                        <div class="value"><%= patient.getName() %></div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info-card">
+                        <div class="label">Phone</div>
+                        <div class="value"><%= patient.getPhone() != null ? patient.getPhone() : "—" %></div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="info-card">
+                        <div class="label">Email</div>
+                        <div class="value"><%= patient.getEmail() != null ? patient.getEmail() : "—" %></div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="info-card">
+                        <div class="label">Address</div>
+                        <div class="value"><%= patient.getAddress() != null ? patient.getAddress() : "—" %></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== APPOINTMENT HISTORY ===================== -->
+    <div class="card card-main">
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0 fw-semibold">
+                <i class="bi bi-calendar2-check me-2"></i>Appointment History
+            </h5>
+        </div>
+        <div class="card-body p-0">
+            <% if (appointments == null || appointments.isEmpty()) { %>
+            <div class="text-center text-muted py-5">
+                <i class="bi bi-calendar-x fs-3 d-block mb-2"></i>
+                This patient has no appointments yet.
+            </div>
+            <% } else { %>
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Treatment</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Token</th>
+                        <th>Payment</th>
+                        <th>Amount</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <% for (Map<String, Object> row : appointments) {
+                        Appointment a = (Appointment) row.get("appointment");
+                        Payment pay = (Payment) row.get("payment");
+                    %>
+                    <tr>
+                        <td><strong>#<%= a.getAppointmentId() %></strong></td>
+                        <td><%= a.getTreatmentName() != null ? a.getTreatmentName() : "—" %></td>
+                        <td><%= a.getAppointmentDate() %></td>
+                        <td><%= a.getAppointmentTime() %></td>
+                        <td>#<%= a.getTokenNumber() %></td>
+                        <td>
+                            <% if (pay != null && pay.isPaid()) { %>
+                            <span class="badge bg-success">Paid</span>
+                            <% } else { %>
+                            <span class="badge bg-danger">Unpaid</span>
+                            <% } %>
+                        </td>
+                        <td>
+                            <% if (pay != null && pay.isPaid()) { %>
+                            <strong>Rs. <%= String.format("%.2f", pay.getTotalAmount()) %></strong>
+                            <% } else { %>
+                            —
+                            <% } %>
+                        </td>
+                    </tr>
+                    <% } %>
+                    </tbody>
+                </table>
+            </div>
+            <% } %>
+        </div>
     </div>
     <% } %>
 
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

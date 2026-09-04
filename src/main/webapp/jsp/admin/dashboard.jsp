@@ -140,17 +140,6 @@
             </a>
         </div>
 
-        <!-- View Appointments -->
-        <div class="col-md-4 col-sm-6">
-            <a href="<%= request.getContextPath() %>/jsp/admin/viewAppointments.jsp" class="dashboard-card d-block p-4">
-                <div class="card-icon appointments-icon">
-                    <i class="bi bi-calendar2-check"></i>
-                </div>
-                <div class="card-title">View Appointments</div>
-                <div class="card-desc">See all scheduled appointments</div>
-            </a>
-        </div>
-
         <!-- Reports -->
         <div class="col-md-4 col-sm-6">
             <a href="<%= request.getContextPath() %>/admin/reports" class="dashboard-card d-block p-4">

@@ -140,16 +140,25 @@
                             boolean hasData = false;
                             while (rs.next()) {
                                 hasData = true;
+
                                 int userId = rs.getInt("user_id");
-                                String username = rs.getString("username");
-                                String email = rs.getString("email");
+                                String username = rs.getString("username") != null ? rs.getString("username") : "";
+                                String email = rs.getString("email") != null ? rs.getString("email") : "";
                                 String address = rs.getString("address") != null ? rs.getString("address") : "";
                                 String phone = rs.getString("phone") != null ? rs.getString("phone") : "";
-                                String role = rs.getString("role");
+                                String role = rs.getString("role") != null ? rs.getString("role") : "";
                                 String specialization = rs.getString("specialization") != null ? rs.getString("specialization") : "";
                                 String license = rs.getString("license_number") != null ? rs.getString("license_number") : "";
                                 String imagePath = rs.getString("image_path");
                                 boolean active = rs.getBoolean("active");
+
+                                // Escape for JavaScript
+                                String jsUsername = username.replace("\\", "\\\\").replace("'", "\\'");
+                                String jsEmail = email.replace("\\", "\\\\").replace("'", "\\'");
+                                String jsAddress = address.replace("\\", "\\\\").replace("'", "\\'");
+                                String jsPhone = phone.replace("\\", "\\\\").replace("'", "\\'");
+                                String jsSpecialization = specialization.replace("\\", "\\\\").replace("'", "\\'");
+                                String jsLicense = license.replace("\\", "\\\\").replace("'", "\\'");
                     %>
                     <tr>
                         <td><strong>#<%= userId %></strong></td>
@@ -190,18 +199,10 @@
                         </td>
                         <td class="text-center">
                             <div class="d-flex justify-content-center gap-1">
+
                                 <!-- Edit Button -->
                                 <button type="button" class="btn btn-sm btn-outline-primary"
-                                        onclick="fillEditForm(
-                                            <%= userId %>,
-                                                '<%= username.replace("'", "\\'") %>',
-                                                '<%= email.replace("'", "\\'") %>',
-                                                '<%= address.replace("'", "\\'") %>',
-                                                '<%= phone.replace("'", "\\'") %>',
-                                                '<%= role %>',
-                                                '<%= specialization.replace("'", "\\'") %>',
-                                                '<%= license.replace("'", "\\'") %>'
-                                                )">
+                                        onclick="fillEditForm(<%= userId %>, '<%= jsUsername %>', '<%= jsEmail %>', '<%= jsAddress %>', '<%= jsPhone %>', '<%= role %>', '<%= jsSpecialization %>', '<%= jsLicense %>')">
                                     <i class="bi bi-pencil"></i>
                                 </button>
 
@@ -209,20 +210,22 @@
                                 <form action="<%= request.getContextPath() %>/admin/users/toggle" method="post" class="d-inline">
                                     <input type="hidden" name="user_id" value="<%= userId %>">
                                     <input type="hidden" name="active" value="<%= !active %>">
-                                    <button type="submit" class="btn btn-sm <%= active ? "btn-outline-warning" : "btn-outline-success" %>"
+                                    <button type="submit"
+                                            class="btn btn-sm <%= active ? "btn-outline-warning" : "btn-outline-success" %>"
                                             title="<%= active ? "Deactivate" : "Activate" %>">
                                         <i class="bi <%= active ? "bi-pause-circle" : "bi-play-circle" %>"></i>
                                     </button>
                                 </form>
 
-                                <!-- Delete -->
+                                <!-- Soft Delete -->
                                 <form action="<%= request.getContextPath() %>/admin/users/delete" method="post" class="d-inline"
-                                      onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                      onsubmit="return confirm('Are you sure you want to deactivate this user? They will be marked as Inactive and can be reactivated later.');">
                                     <input type="hidden" name="user_id" value="<%= userId %>">
-                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Deactivate User">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>
+
                             </div>
                         </td>
                     </tr>

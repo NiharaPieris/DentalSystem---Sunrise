@@ -10,264 +10,323 @@
 %>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Receptionist - Payment & Invoice</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment & Invoice - Sunrise Dental</title>
+
+    <!-- Bootstrap 5 + Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
     <style>
+        :root {
+            --primary: #0d6efd;
+            --card-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background: #f5f5f5;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
         }
-        .container {
-            max-width: 850px;
-            margin: auto;
+
+        .page-header {
+            background: white;
+            border-radius: 16px;
+            padding: 1.25rem 1.5rem;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 1.5rem;
         }
-        .card {
-            background: #fff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 25px;
-            margin-bottom: 25px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 30px;
-        }
-        h2 {
-            margin-top: 0;
-            color: #222;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 8px;
-        }
-        label {
-            display: block;
-            margin-top: 12px;
-            font-weight: bold;
-            color: #444;
-        }
-        input, select {
-            width: 100%;
-            padding: 10px;
-            margin-top: 6px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 14px;
-        }
-        input[type=submit], button {
-            width: auto;
-            background: #2c3e50;
-            color: white;
+
+        .card-main {
             border: none;
-            padding: 11px 22px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 18px;
-            font-size: 14px;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            background: white;
         }
-        input[type=submit]:hover, button:hover {
-            background: #1a252f;
+
+        .form-control, .form-select {
+            border-radius: 10px;
         }
-        .error {
-            background: #f8d7da;
-            color: #721c24;
-            padding: 12px 15px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-            border: 1px solid #f5c6cb;
+
+        .form-control:focus, .form-select:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
         }
-        .success {
-            background: #d4edda;
-            color: #155724;
-            padding: 12px 15px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-            border: 1px solid #c3e6cb;
+
+        .btn {
+            border-radius: 10px;
+            font-weight: 500;
         }
-        .details-grid {
-            display: grid;
-            grid-template-columns: 180px 1fr;
-            gap: 10px 15px;
-            margin-top: 15px;
+
+        .info-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            height: 100%;
         }
-        .details-grid strong {
-            color: #555;
+
+        .info-card .label {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-bottom: 2px;
         }
-        .paid-badge {
-            display: inline-block;
-            background: #28a745;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: bold;
+
+        .info-card .value {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #212529;
         }
-        .unpaid-badge {
-            display: inline-block;
-            background: #dc3545;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: bold;
+
+        .badge {
+            font-weight: 500;
+            padding: 6px 12px;
         }
-        .btn-print {
-            background: #17a2b8 !important;
-        }
-        .btn-print:hover {
-            background: #138496 !important;
-        }
-        .btn-pay {
-            background: #28a745 !important;
-        }
-        .btn-pay:hover {
-            background: #218838 !important;
+
+        .payment-summary {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 1.25rem;
         }
     </style>
 </head>
 <body>
-<div class="container">
 
-    <h1>Payment & Invoice Management</h1>
+<div class="container py-4">
 
-    <%-- Error Message --%>
+    <!-- Header -->
+    <div class="page-header d-flex justify-content-between align-items-center">
+        <div>
+            <h2 class="mb-0 fw-bold">
+                <i class="bi bi-credit-card me-2 text-primary"></i>Payment & Invoice
+            </h2>
+            <small class="text-muted">Find appointments, collect payments and generate invoices</small>
+        </div>
+        <a href="<%= request.getContextPath() %>/jsp/receptionist/dashboard.jsp" class="btn btn-outline-primary btn-sm">
+            <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+        </a>
+    </div>
+
     <% if (error != null) { %>
-    <div class="error"><%= error %></div>
+    <div class="alert alert-danger d-flex align-items-center mb-4">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <%= error %>
+    </div>
     <% } %>
 
     <!-- ===================== STEP 1: SEARCH ===================== -->
-    <div class="card">
-        <h2>Find Appointment</h2>
-        <form action="<%= request.getContextPath() %>/receptionist/payment" method="post">
-            <input type="hidden" name="action" value="search">
+    <div class="card card-main mb-4">
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0 fw-semibold">
+                <i class="bi bi-search me-2"></i>Find Appointment
+            </h5>
+        </div>
+        <div class="card-body">
+            <form action="<%= request.getContextPath() %>/receptionist/payment" method="post">
+                <input type="hidden" name="action" value="search">
 
-            <label for="treatment_id">Treatment Name</label>
-            <select name="treatment_id" id="treatment_id" required>
-                <option value="">-- Select Treatment --</option>
-                <%
-                    try (Connection conn = DBConnection.getConnection();
-                         Statement st = conn.createStatement();
-                         ResultSet rs = st.executeQuery(
-                                 "SELECT MIN(treatment_id) AS tid, UPPER(name) AS uname " +
-                                         "FROM treatments GROUP BY uname ORDER BY uname")) {
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Treatment</label>
+                        <select name="treatment_id" class="form-select" required>
+                            <option value="">-- Select Treatment --</option>
+                            <%
+                                try (Connection conn = DBConnection.getConnection();
+                                     Statement st = conn.createStatement();
+                                     ResultSet rs = st.executeQuery(
+                                             "SELECT MIN(treatment_id) AS tid, UPPER(name) AS uname " +
+                                                     "FROM treatments WHERE active = TRUE " +
+                                                     "GROUP BY uname ORDER BY uname")) {
 
-                        while (rs.next()) {
-                            int tid = rs.getInt("tid");
-                            String name = rs.getString("uname");
-                            String displayName = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
-                %>
-                <option value="<%= tid %>"><%= displayName %></option>
-                <%
-                        }
-                    } catch (Exception e) {
-                        out.println("<option disabled>Error loading treatments</option>");
-                    }
-                %>
-            </select>
+                                    while (rs.next()) {
+                                        int tid = rs.getInt("tid");
+                                        String name = rs.getString("uname");
+                                        String displayName = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+                            %>
+                            <option value="<%= tid %>"><%= displayName %></option>
+                            <%
+                                }
+                            } catch (Exception e) {
+                            %>
+                            <option disabled>Error loading treatments</option>
+                            <% } %>
+                        </select>
+                    </div>
 
-            <label for="appointment_date">Appointment Date</label>
-            <input type="date" name="appointment_date" id="appointment_date" required>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Appointment Date</label>
+                        <input type="date" name="appointment_date" class="form-control" required>
+                    </div>
 
-            <label for="token_number">Token Number</label>
-            <input type="number" name="token_number" id="token_number" min="1" required placeholder="Enter token number">
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Token Number</label>
+                        <input type="number" name="token_number" class="form-control" min="1" required
+                               placeholder="Enter token number">
+                    </div>
+                </div>
 
-            <input type="submit" value="Search Appointment">
-        </form>
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-search me-1"></i> Search Appointment
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <!-- ===================== STEP 2: DETAILS + PAYMENT ===================== -->
     <% if (appointment != null) { %>
-    <div class="card">
-        <h2>Appointment & Patient Details</h2>
-
-        <div class="details-grid">
-            <strong>Patient Name:</strong>
-            <span><%= appointment.getPatientName() %></span>
-
-            <strong>Email:</strong>
-            <span><%= appointment.getPatientEmail() %></span>
-
-            <strong>Phone:</strong>
-            <span><%= appointment.getPatientPhone() %></span>
-
-            <strong>Treatment:</strong>
-            <span><%= appointment.getTreatmentName() %></span>
-
-            <strong>Date:</strong>
-            <span><%= appointment.getAppointmentDate() %></span>
-
-            <strong>Time:</strong>
-            <span><%= appointment.getAppointmentTime() %></span>
-
-            <strong>Token Number:</strong>
-            <span><%= appointment.getTokenNumber() %></span>
-
-            <strong>Appointment ID:</strong>
-            <span><%= appointment.getAppointmentId() %></span>
-
-            <strong>Payment Status:</strong>
-            <span>
-                <% if (payment != null && payment.isPaid()) { %>
-                    <span class="paid-badge">PAID</span>
-                <% } else { %>
-                    <span class="unpaid-badge">UNPAID</span>
-                <% } %>
-            </span>
-        </div>
-
-        <%-- ========== IF ALREADY PAID → PRINT INVOICE ========== --%>
-        <% if (payment != null && payment.isPaid()) { %>
-        <div style="margin-top: 25px;">
-            <p><strong>Payment already completed.</strong></p>
-            <p>Consultation Fee: Rs. <%= payment.getConsultationFee() %></p>
-            <% if (payment.getOtherFeeName() != null && !payment.getOtherFeeName().isBlank()) { %>
-            <p>Other Fee (<%= payment.getOtherFeeName() %>): Rs. <%= payment.getOtherFee() %></p>
+    <div class="card card-main mb-4">
+        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 fw-semibold">
+                <i class="bi bi-file-earmark-medical me-2"></i>Appointment Details
+            </h5>
+            <% if (payment != null && payment.isPaid()) { %>
+            <span class="badge bg-success">Paid</span>
+            <% } else { %>
+            <span class="badge bg-danger">Unpaid</span>
             <% } %>
-            <p><strong>Total Paid: Rs. <%= payment.getTotalAmount() %></strong></p>
-            <p>Paid At: <%= payment.getPaidAt() %></p>
-
-            <form action="<%= request.getContextPath() %>/receptionist/payment" method="post" style="display:inline;">
-                <input type="hidden" name="action" value="print">
-                <input type="hidden" name="appointment_id" value="<%= appointment.getAppointmentId() %>">
-                <input type="submit" value="Print Invoice" class="btn-print">
-            </form>
         </div>
+        <div class="card-body">
 
-        <%-- ========== IF UNPAID → PAYMENT FORM ========== --%>
-        <% } else { %>
-        <div style="margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px;">
-            <h3 style="margin-top:0;">Enter Payment Details</h3>
+            <!-- Patient & Appointment Info -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <div class="info-card">
+                        <div class="label">Patient Name</div>
+                        <div class="value"><%= appointment.getPatientName() %></div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info-card">
+                        <div class="label">Phone</div>
+                        <div class="value"><%= appointment.getPatientPhone() != null ? appointment.getPatientPhone() : "—" %></div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info-card">
+                        <div class="label">Email</div>
+                        <div class="value"><%= appointment.getPatientEmail() != null ? appointment.getPatientEmail() : "—" %></div>
+                    </div>
+                </div>
 
-            <form action="<%= request.getContextPath() %>/receptionist/payment" method="post">
-                <input type="hidden" name="action" value="pay">
-                <input type="hidden" name="appointment_id" value="<%= appointment.getAppointmentId() %>">
+                <div class="col-md-3">
+                    <div class="info-card">
+                        <div class="label">Treatment</div>
+                        <div class="value"><%= appointment.getTreatmentName() %></div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="info-card">
+                        <div class="label">Date</div>
+                        <div class="value"><%= appointment.getAppointmentDate() %></div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="info-card">
+                        <div class="label">Time</div>
+                        <div class="value"><%= appointment.getAppointmentTime() %></div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="info-card">
+                        <div class="label">Token / Appt ID</div>
+                        <div class="value">#<%= appointment.getTokenNumber() %> / #<%= appointment.getAppointmentId() %></div>
+                    </div>
+                </div>
+            </div>
 
-                <label for="consultation_fee">Consultation Fee</label>
-                <select name="consultation_fee" id="consultation_fee" required>
-                    <option value="">-- Select Fee --</option>
-                    <option value="500">Rs. 500</option>
-                    <option value="1000">Rs. 1000</option>
-                    <option value="1500">Rs. 1500</option>
-                </select>
+            <%-- ========== ALREADY PAID ========== --%>
+            <% if (payment != null && payment.isPaid()) { %>
+            <div class="payment-summary">
+                <h6 class="fw-semibold mb-3">
+                    <i class="bi bi-check-circle-fill text-success me-2"></i>Payment Completed
+                </h6>
 
-                <label for="other_fee_name">Other Payment Name (optional)</label>
-                <input type="text" name="other_fee_name" id="other_fee_name"
-                       placeholder="e.g. Special Checking, X-Ray, etc.">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="label text-muted small">Consultation Fee</div>
+                        <div class="fw-semibold">Rs. <%= payment.getConsultationFee() %></div>
+                    </div>
+                    <% if (payment.getOtherFeeName() != null && !payment.getOtherFeeName().isBlank()) { %>
+                    <div class="col-md-4">
+                        <div class="label text-muted small"><%= payment.getOtherFeeName() %></div>
+                        <div class="fw-semibold">Rs. <%= payment.getOtherFee() %></div>
+                    </div>
+                    <% } %>
+                    <div class="col-md-4">
+                        <div class="label text-muted small">Total Paid</div>
+                        <div class="fw-bold text-success fs-5">Rs. <%= payment.getTotalAmount() %></div>
+                    </div>
+                    <div class="col-12">
+                        <div class="label text-muted small">Paid At</div>
+                        <div><%= payment.getPaidAt() != null ? payment.getPaidAt() : "—" %></div>
+                    </div>
+                </div>
 
-                <label for="other_fee">Other Payment Amount (optional)</label>
-                <input type="number" name="other_fee" id="other_fee"
-                       step="0.01" min="0" placeholder="e.g. 1000">
+                <div class="mt-4">
+                    <form action="<%= request.getContextPath() %>/receptionist/payment" method="post" class="d-inline">
+                        <input type="hidden" name="action" value="print">
+                        <input type="hidden" name="appointment_id" value="<%= appointment.getAppointmentId() %>">
+                        <button type="submit" class="btn btn-info text-white">
+                            <i class="bi bi-printer me-1"></i> Print Invoice
+                        </button>
+                    </form>
+                </div>
+            </div>
 
-                <input type="submit" value="Pay & Generate Invoice" class="btn-pay">
-            </form>
+            <%-- ========== UNPAID → PAYMENT FORM ========== --%>
+            <% } else { %>
+            <div class="border-top pt-4">
+                <h6 class="fw-semibold mb-3">
+                    <i class="bi bi-cash-coin me-2 text-success"></i>Enter Payment Details
+                </h6>
+
+                <form action="<%= request.getContextPath() %>/receptionist/payment" method="post">
+                    <input type="hidden" name="action" value="pay">
+                    <input type="hidden" name="appointment_id" value="<%= appointment.getAppointmentId() %>">
+
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Consultation Fee <span class="text-danger">*</span></label>
+                            <select name="consultation_fee" class="form-select" required>
+                                <option value="">-- Select Fee --</option>
+                                <option value="500">Rs. 500</option>
+                                <option value="1000">Rs. 1000</option>
+                                <option value="1500">Rs. 1500</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Other Fee Name (optional)</label>
+                            <input type="text" name="other_fee_name" class="form-control"
+                                   placeholder="e.g. X-Ray, Special Check">
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Other Fee Amount (optional)</label>
+                            <input type="number" name="other_fee" class="form-control"
+                                   step="0.01" min="0" placeholder="e.g. 1000">
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-check-lg me-1"></i> Pay & Generate Invoice
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <% } %>
+
         </div>
-        <% } %>
     </div>
     <% } %>
 
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

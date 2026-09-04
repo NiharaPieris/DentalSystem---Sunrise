@@ -148,6 +148,7 @@
                                      "SELECT t.*, u.username AS dentist_name " +
                                              "FROM treatments t " +
                                              "JOIN users u ON t.dentist_id = u.user_id " +
+                                             "WHERE t.active = TRUE " +          // ← Soft delete filter
                                              "ORDER BY t.treatment_id DESC")) {
 
                             boolean hasData = false;
@@ -216,11 +217,11 @@
                                     <i class="bi bi-pencil"></i>
                                 </button>
 
-                                <!-- Delete -->
+                                <!-- Soft Delete -->
                                 <form action="<%= request.getContextPath() %>/admin/treatments/delete" method="post" class="d-inline"
-                                      onsubmit="return confirm('Are you sure you want to delete this treatment?');">
+                                      onsubmit="return confirm('Are you sure you want to hide this treatment?\\nIt will no longer appear in the list, but existing appointments will remain safe.');">
                                     <input type="hidden" name="treatment_id" value="<%= id %>">
-                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Hide Treatment">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>
