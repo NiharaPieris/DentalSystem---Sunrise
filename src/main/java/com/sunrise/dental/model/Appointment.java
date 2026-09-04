@@ -17,6 +17,18 @@ public class Appointment {
     private String patientName;
     private String patientEmail;
     private String patientPhone;
+    private String patientAddress;       // NEW
+
+    // NEW - treatment details
+    private int duration;
+    private double cost;
+
+    // NEW - dentist
+    private String dentistName;
+
+    // NEW - payment
+    private boolean paid;
+    private double amountPaid;
 
     // ===================== Getters & Setters =====================
 
@@ -53,4 +65,22 @@ public class Appointment {
 
     public String getPatientPhone() { return patientPhone; }
     public void setPatientPhone(String patientPhone) { this.patientPhone = patientPhone; }
+
+    public String getPatientAddress() { return patientAddress; }
+    public void setPatientAddress(String patientAddress) { this.patientAddress = patientAddress; }
+
+    public int getDuration() { return duration; }
+    public void setDuration(int duration) { this.duration = duration; }
+
+    public double getCost() { return cost; }
+    public void setCost(double cost) { this.cost = cost; }
+
+    public String getDentistName() { return dentistName; }
+    public void setDentistName(String dentistName) { this.dentistName = dentistName; }
+
+    public boolean isPaid() { return paid; }
+    public void setPaid(boolean paid) { this.paid = paid; }
+
+    public double getAmountPaid() { return amountPaid; }
+    public void setAmountPaid(double amountPaid) { this.amountPaid = amountPaid; }
 }

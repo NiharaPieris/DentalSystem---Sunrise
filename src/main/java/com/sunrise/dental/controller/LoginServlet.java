@@ -8,6 +8,7 @@ import java.sql.*;
 import com.sunrise.dental.util.DBConnection;
 
 public class LoginServlet extends HttpServlet {
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -16,37 +17,68 @@ public class LoginServlet extends HttpServlet {
         String password = req.getParameter("password");
 
         try (Connection conn = DBConnection.getConnection()) {
-            // Check in users table
-            String sql = "SELECT * FROM users WHERE username=? AND password=?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, username);
-            ps.setString(2, password);
 
-            ResultSet rs = ps.executeQuery();
+            // 1. Check Admin
+            String adminSql = "SELECT id, username FROM admin WHERE username = ? AND password = ?";
+            try (PreparedStatement ps = conn.prepareStatement(adminSql)) {
+                ps.setString(1, username);
+                ps.setString(2, password);
+                ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {
-                String role = rs.getString("role");
+                if (rs.next()) {
+                    HttpSession session = req.getSession(true);
+                    session.setAttribute("user_id", rs.getInt("id"));
+                    session.setAttribute("username", rs.getString("username"));
+                    session.setAttribute("role", "Admin");
 
-                // Store user info in session
-                HttpSession session = req.getSession();
-                session.setAttribute("user_id", rs.getInt("user_id"));
-                session.setAttribute("username", rs.getString("username"));
-                session.setAttribute("role", role);
-
-                // Redirect based on role
-                if ("Dentist".equalsIgnoreCase(role)) {
-                    resp.sendRedirect(req.getContextPath() + "/jsp/dentist/dashboard.jsp");
-                } else if ("Receptionist".equalsIgnoreCase(role)) {
-                    resp.sendRedirect(req.getContextPath() + "/jsp/receptionist/dashboard.jsp");
-                } else {
-                    resp.getWriter().println("<h3>Unknown role. Contact admin.</h3>");
+                    resp.sendRedirect(req.getContextPath() + "/jsp/admin/dashboard.jsp");
+                    return;
                 }
-            } else {
-                resp.getWriter().println("<h3>Invalid credentials. Try again.</h3>");
             }
+
+            // 2. Check Dentist / Receptionist
+            String userSql = "SELECT * FROM users WHERE username = ? AND password = ?";
+            try (PreparedStatement ps = conn.prepareStatement(userSql)) {
+                ps.setString(1, username);
+                ps.setString(2, password);
+                ResultSet rs = ps.executeQuery();
+
+                if (rs.next()) {
+                    int userId;
+                    try {
+                        userId = rs.getInt("user_id");
+                    } catch (Exception e) {
+                        userId = rs.getInt("id");
+                    }
+
+                    String role = rs.getString("role");
+
+                    // Store identity in session
+                    HttpSession session = req.getSession(true);
+                    session.setAttribute("user_id", userId);          // ← This is the important part
+                    session.setAttribute("username", rs.getString("username"));
+                    session.setAttribute("role", role);
+
+                    // Redirect according to role
+                    if ("Dentist".equalsIgnoreCase(role)) {
+                        resp.sendRedirect(req.getContextPath() + "/jsp/dentist/dashboard.jsp");
+                    } else if ("Receptionist".equalsIgnoreCase(role)) {
+                        resp.sendRedirect(req.getContextPath() + "/jsp/receptionist/dashboard.jsp");
+                    } else {
+                        resp.getWriter().println("Unknown role");
+                    }
+                    return;
+                }
+            }
+
+            // Login failed
+            resp.setContentType("text/html");
+            resp.getWriter().println("<h3 style='color:red;'>Invalid username or password</h3>");
+            resp.getWriter().println("<a href='" + req.getContextPath() + "/login.jsp'>Try Again</a>");
+
         } catch (Exception e) {
             e.printStackTrace();
-            resp.getWriter().println("<h3>Error connecting to database.</h3>");
+            resp.getWriter().println("Database error: " + e.getMessage());
         }
     }
 }

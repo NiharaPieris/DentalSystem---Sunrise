@@ -25,7 +25,6 @@
     <a href="<%= request.getContextPath() %>/jsp/admin/manageTreatments.jsp">Manage Treatments</a>
     <a href="<%= request.getContextPath() %>/jsp/admin/viewPatients.jsp">View Patients</a>
     <a href="<%= request.getContextPath() %>/jsp/admin/viewAppointments.jsp">View Appointments</a>
-    <a href="<%= request.getContextPath() %>/jsp/admin/viewBills.jsp">View Bills</a>
     <a href="<%= request.getContextPath() %>/jsp/admin/reports.jsp">Reports</a>
 </nav>
 </body>

@@ -12,18 +12,40 @@ import java.util.Map;
 public class PatientServlet extends HttpServlet {
 
     private final PatientService service = new PatientService();
-    private static final String PATIENT_JSP = "/jsp/receptionist/managePatients.jsp";
+
+    // We will decide the JSP path based on role
+    private String getJspPath(HttpServletRequest req) {
+        String role = (String) req.getSession().getAttribute("role");
+        if ("Admin".equalsIgnoreCase(role)) {
+            return "/jsp/admin/viewPatients.jsp";
+        } else {
+            return "/jsp/receptionist/managePatients.jsp";
+        }
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        // Just show the empty search page
-        req.getRequestDispatcher(PATIENT_JSP).forward(req, resp);
+
+        // Check login
+        HttpSession session = req.getSession(false);
+        if (session == null || session.getAttribute("user_id") == null) {
+            resp.sendRedirect(req.getContextPath() + "/jsp/login.jsp");
+            return;
+        }
+
+        req.getRequestDispatcher(getJspPath(req)).forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+
+        HttpSession session = req.getSession(false);
+        if (session == null || session.getAttribute("user_id") == null) {
+            resp.sendRedirect(req.getContextPath() + "/jsp/login.jsp");
+            return;
+        }
 
         String action = req.getParameter("action");
 
@@ -38,7 +60,7 @@ public class PatientServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             req.setAttribute("error", e.getMessage());
-            req.getRequestDispatcher(PATIENT_JSP).forward(req, resp);
+            req.getRequestDispatcher(getJspPath(req)).forward(req, resp);
         }
     }
 
@@ -54,7 +76,7 @@ public class PatientServlet extends HttpServlet {
         req.setAttribute("searchPhone", phone);
         req.setAttribute("searchEmail", email);
 
-        req.getRequestDispatcher(PATIENT_JSP).forward(req, resp);
+        req.getRequestDispatcher(getJspPath(req)).forward(req, resp);
     }
 
     private void handleView(HttpServletRequest req, HttpServletResponse resp) throws Exception {
@@ -70,6 +92,6 @@ public class PatientServlet extends HttpServlet {
         req.setAttribute("patient", patient);
         req.setAttribute("appointments", appointments);
 
-        req.getRequestDispatcher(PATIENT_JSP).forward(req, resp);
+        req.getRequestDispatcher(getJspPath(req)).forward(req, resp);
     }
 }

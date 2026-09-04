@@ -61,5 +61,20 @@
         <url-pattern>/receptionist/patients</url-pattern>
     </servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>PatientServlet</servlet-name>
+        <url-pattern>/admin/patients</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>DentistAppointmentServlet</servlet-name>
+        <servlet-class>com.sunrise.dental.controller.DentistAppointmentServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>DentistAppointmentServlet</servlet-name>
+        <url-pattern>/dentist/appointments</url-pattern>
+    </servlet-mapping>
+
 
 </web-app>
